@@ -1,7 +1,6 @@
 
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString } from 'class-validator';
-import { Transform } from 'class-transformer';
 
 export class CreateEntryDto {
   @ApiProperty({ description: 'Enuncia el contenido de la entrada', example: 'Mi entrada' })

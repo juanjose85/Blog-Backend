@@ -31,14 +31,14 @@ export class BlogController {
     }
 
     @Get('search-by-content/:content')
-    @ApiQuery({ name: 'content', description: 'Contenido de la entrada'})
+    @ApiQuery({ name: 'content', description: 'Contenido de la entrada', required: true})
     @ApiResponse({ status: 200, description: 'Obtiene todas las entradas', type: Entry, isArray: true})
     getEntryByContent(@Param('content') content: string): Promise<Entry[]> {
         return this.blogService.searchEntriesByContent(content);
     }
 
     @Get('search-by-author/:author')
-    @ApiQuery({ name: 'author', description: 'Autor de la entrada'})
+    @ApiQuery({ name: 'author', description: 'Autor de la entrada', required: true})
     @ApiResponse({ status: 200, description: 'Obtiene todas las entradas', type: Entry, isArray: true })
     getEntryByAuthor(@Param('author') author: string): Promise<Entry[]> {
         return this.blogService.searchEntriesByAuthor(author);
