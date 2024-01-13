@@ -1,8 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, Like } from 'typeorm';
 import { Entry } from './blog.entity';
 import { CreateEntryDto } from './dto/create-entry.dto';
+import { format } from 'date-fns';
 
 @Injectable()
 export class BlogService {
@@ -24,20 +25,33 @@ export class BlogService {
     }
 
     async createEntry(entryData: CreateEntryDto): Promise<Entry> {
-        const newEntry = this.entryRepository.create(entryData);
+        const formattedDate = format(entryData.publicationDate, 'dd/MM/yyyy');
+
+        const newEntry = this.entryRepository.create({
+            ...entryData,
+            publicationDate: formattedDate,
+        });
         return this.entryRepository.save(newEntry);
     }
 
     async updateEntry(id: number, updatedEntry: Entry): Promise<Entry> {
-        if (!id)
-            throw new Error(`update error: id is empty.`);
-        try {
-            updatedEntry.id = id;
-            return this.entryRepository.save(updatedEntry);
+        const entryToUpdate = await this.entryRepository.findOne({
+            where: {
+                id: id
+            }
+        });
+
+        if (!entryToUpdate) {
+            throw new NotFoundException(`Entrada con ID ${id} no encontrada`);
         }
-        catch (ex) {
-            throw new Error(`Update error: ${ex.message}.`);
-        }
+
+        // Actualiza los campos de la entrada con los nuevos datos
+        entryToUpdate.title = updatedEntry.title;
+        entryToUpdate.author = updatedEntry.author;
+        entryToUpdate.content = updatedEntry.content;
+        entryToUpdate.publicationDate = new Date(format(updatedEntry.publicationDate, 'dd/MM/yyyy'));
+
+        return this.entryRepository.save(entryToUpdate);
     }
 
     async deleteEntry(id: number): Promise<void> {
