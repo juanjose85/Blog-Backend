@@ -5,6 +5,7 @@ import { AppService } from './app.service';
 import { BlogService } from './blog/blog.service';
 import { PostController } from './post/post.controller';
 import { PostService } from './post/post.service';
+import { BlogModule } from './blog/blog.module';
 
 
 @Module({
@@ -19,6 +20,7 @@ import { PostService } from './post/post.service';
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
     }),
+    BlogModule,
   ],
   controllers: [AppController, PostController],
   providers: [AppService, BlogService, PostService],

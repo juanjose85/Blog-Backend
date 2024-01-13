@@ -1,5 +1,7 @@
-import { Controller, Get, Post, Body, Put, Delete } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { Controller, Get, Post, Body, Put, Delete, Param} from '@nestjs/common';
+import { ApiTags, ApiResponse} from '@nestjs/swagger';
+import { Entry } from './blog.entity';
+import { BlogService } from './blog.service';
 
 @ApiTags('Blog')
 @Controller('blog')
@@ -7,27 +9,29 @@ export class BlogController {
     constructor(private readonly blogService: BlogService) { }
 
     @Get()
-    getAllBlogs(): Promise<Blog[]> {
-        return this.blogService.getAllBlogs();
+    @ApiResponse({ status: 200, description: 'Obtiene todas las entradas' })
+    getAllEntries(): Promise<Entry[]> {
+        return this.blogService.getAllEntries();
     }
 
     @Get(':id')
-    getBlogById(@Param('id') id: string): Promise<Blog> {
-        return this.blogService.getBlogById(id);
+    getEntryById(@Param('id') id: number): Promise<Entry> {
+        return this.blogService.getEntryById(id);
     }
 
     @Post()
-    createBlog(@Body() blog: Blog): Promise<Blog> {
-        return this.blogService.createBlog(blog);
+    @ApiResponse({ status: 201, description: 'Crea una nueva entrada' })
+    createEntry(@Body() entry: Entry): Promise<Entry> {
+        return this.blogService.createEntry(entry);
     }
 
     @Put(':id')
-    updateBlog(@Param('id') id: string, @Body() updatedBlog: Blog): Promise<Blog> {
-        return this.blogService.updateBlog(id, updatedBlog);
+    updateEntry(@Param('id') id: number, @Body() updatedEntry: Entry): Promise<Entry> {
+        return this.blogService.updateEntry(id, updatedEntry);
     }
 
     @Delete(':id')
-    deleteBlog(@Param('id') id: string): Promise<Blog> {
-        return this.blogService.deleteBlog(id);
+    deleteEntry(@Param('id') id: number): Promise<void> {
+        return this.blogService.deleteEntry(id);
     }
 }
