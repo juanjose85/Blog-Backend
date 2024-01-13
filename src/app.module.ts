@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { BlogModule } from './blog/blog.module';
 
 
 @Module({
@@ -15,9 +14,10 @@ import { AppService } from './app.service';
       database: 'blog',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
+      logging: true,
+      logger: "advanced-console"
     }),
-  ],
-  controllers: [AppController],
-  providers: [AppService],
+    BlogModule,
+  ]
 })
 export class AppModule {}
