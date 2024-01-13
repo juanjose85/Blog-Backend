@@ -1,5 +1,5 @@
-import { Controller, Get, Post, Body, Put, Delete, Param} from '@nestjs/common';
-import { ApiTags, ApiResponse, ApiBody, ApiOperation, ApiParam} from '@nestjs/swagger';
+import { Controller, Get, Post, Body, Put, Delete, Param, Query} from '@nestjs/common';
+import { ApiTags, ApiResponse, ApiBody, ApiOperation, ApiParam, ApiQuery} from '@nestjs/swagger';
 import { Entry } from './blog.entity';
 import { BlogService } from './blog.service';
 import { CreateEntryDto } from './dto/create-entry.dto';
@@ -11,7 +11,7 @@ export class BlogController {
 
     @Get()
     @ApiOperation({ summary: 'Retorna todas las entradas del blog' })
-    @ApiResponse({ status: 200, description: 'Retorna todas las entradas' })
+    @ApiResponse({ status: 200, description: 'Retorna todas las entradas', type: Entry, isArray: true })
     getAllEntries(): Promise<Entry[]> {
         return this.blogService.getAllEntries();
     }
@@ -23,9 +23,30 @@ export class BlogController {
         return this.blogService.getEntryById(id);
     }
 
+    @Get('search-by-title/:title')
+    @ApiQuery({ name: 'title', description: 'Titulo de la entrada', required: true })
+    @ApiResponse({ status: 200, description: 'Obtiene todas las entradas', type: Entry, isArray: true })
+    getEntryByTitle(@Param('title') title: string): Promise<Entry[]> {
+        return this.blogService.searchEntriesByTitle(title);
+    }
+
+    @Get('search-by-content/:content')
+    @ApiQuery({ name: 'content', description: 'Contenido de la entrada'})
+    @ApiResponse({ status: 200, description: 'Obtiene todas las entradas', type: Entry, isArray: true})
+    getEntryByContent(@Param('content') content: string): Promise<Entry[]> {
+        return this.blogService.searchEntriesByContent(content);
+    }
+
+    @Get('search-by-author/:author')
+    @ApiQuery({ name: 'author', description: 'Autor de la entrada'})
+    @ApiResponse({ status: 200, description: 'Obtiene todas las entradas', type: Entry, isArray: true })
+    getEntryByAuthor(@Param('author') author: string): Promise<Entry[]> {
+        return this.blogService.searchEntriesByAuthor(author);
+    }
+
     @Post()
     @ApiBody({ type: CreateEntryDto })
-    @ApiResponse({ status: 201, description: 'Crea una nueva entrada' })
+    @ApiResponse({ status: 201, description: 'Crea una nueva entrada', type: Entry })
     createEntry(@Body() entry: Entry): Promise<Entry> {
         return this.blogService.createEntry(entry);
     }
