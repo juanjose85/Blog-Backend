@@ -24,21 +24,21 @@ export class BlogController {
     }
 
     @Get('search-by-title/:title')
-    @ApiQuery({ name: 'title', description: 'Titulo de la entrada', required: true })
+    @ApiParam({ name: 'title', description: 'Titulo de la entrada', required: true })
     @ApiResponse({ status: 200, description: 'Obtiene todas las entradas', type: Entry, isArray: true })
     getEntryByTitle(@Param('title') title: string): Promise<Entry[]> {
         return this.blogService.searchEntriesByTitle(title);
     }
 
     @Get('search-by-content/:content')
-    @ApiQuery({ name: 'content', description: 'Contenido de la entrada', required: true})
+    @ApiParam({ name: 'content', description: 'Contenido de la entrada', required: true})
     @ApiResponse({ status: 200, description: 'Obtiene todas las entradas', type: Entry, isArray: true})
     getEntryByContent(@Param('content') content: string): Promise<Entry[]> {
         return this.blogService.searchEntriesByContent(content);
     }
 
     @Get('search-by-author/:author')
-    @ApiQuery({ name: 'author', description: 'Autor de la entrada', required: true})
+    @ApiParam({ name: 'author', description: 'Autor de la entrada', required: true})
     @ApiResponse({ status: 200, description: 'Obtiene todas las entradas', type: Entry, isArray: true })
     getEntryByAuthor(@Param('author') author: string): Promise<Entry[]> {
         return this.blogService.searchEntriesByAuthor(author);
