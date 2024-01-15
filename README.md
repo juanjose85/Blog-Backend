@@ -26,6 +26,9 @@
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
+## Before installation 
+Install MySQL and configure the ormconfig.json and app.module.ts files with the database connection settings.
+
 ## Installation
 
 ```bash
