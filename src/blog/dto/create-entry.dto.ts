@@ -1,7 +1,6 @@
 
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString } from 'class-validator';
-import { Transform } from 'class-transformer';
 
 export class CreateEntryDto {
   @ApiProperty({ description: 'Enuncia el contenido de la entrada', example: 'Mi entrada' })
@@ -16,7 +15,7 @@ export class CreateEntryDto {
 
   @ApiProperty({ description: 'Fecha en que la entrada fue guardada', example: 'dd/mm/aaaa' })
   @IsNotEmpty()
-  publicationDate: Date;
+  publicationDate: string;
 
   @ApiProperty({ description: 'Un escrito breve, una idea o pensamiento.', example: 'Contenido de mi entrada' })
   @IsNotEmpty()
