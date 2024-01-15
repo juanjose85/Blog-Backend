@@ -15,7 +15,7 @@ export class CreateEntryDto {
 
   @ApiProperty({ description: 'Fecha en que la entrada fue guardada', example: 'dd/mm/aaaa' })
   @IsNotEmpty()
-  publicationDate: Date;
+  publicationDate: string;
 
   @ApiProperty({ description: 'Un escrito breve, una idea o pensamiento.', example: 'Contenido de mi entrada' })
   @IsNotEmpty()

@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Like } from 'typeorm';
 import { Entry } from './blog.entity';
 import { CreateEntryDto } from './dto/create-entry.dto';
-import { format } from 'date-fns';
+import * as moment from 'moment';
 
 @Injectable()
 export class BlogService {
@@ -27,18 +27,23 @@ export class BlogService {
     }
 
     // Crear una nueva entrada.
-    async createEntry(entryData: CreateEntryDto): Promise<Entry> {
-        const formattedDate = format(entryData.publicationDate, 'dd/MM/yyyy');
+    async createEntry(entryDto: CreateEntryDto): Promise<Entry> {
+    	const { title, author, publicationDate, content } = entryDto;
 
-        const newEntry = this.entryRepository.create({
-            ...entryData,
-            publicationDate: formattedDate,
-        });
-        return this.entryRepository.save(newEntry);
+	// Parsear la cadena de fecha utilizando Moment.js
+	const parsedDate = moment(publicationDate, 'DD/MM/YYYY', true);
+
+	if (!parsedDate.isValid()) {
+	  // Manejar el caso en que la fecha no sea válida
+	  throw new Error('Fecha de publicación no válida');
+	}
+
+	const entry = this.entryRepository.create({ title, author, publicationDate: parsedDate.toDate(), content });
+	return this.entryRepository.save(entry);
     }
 
     // Actualizar una entrada.
-    async updateEntry(id: number, updatedEntry: Entry): Promise<Entry> {
+    async updateEntry(id: number, updatedEntryDto: CreateEntryDto): Promise<Entry> {
         const entryToUpdate = await this.entryRepository.findOne({
             where: {
                 id: id
@@ -48,12 +53,22 @@ export class BlogService {
         if (!entryToUpdate) {
             throw new NotFoundException(`Entrada con ID ${id} no encontrada`);
         }
+        
+        const { title, author, publicationDate, content } = updatedEntryDto;
+
+	// Parsear la cadena de fecha utilizando Moment.js
+	const parsedDate = moment(publicationDate, 'DD/MM/YYYY', true);
+
+	if (!parsedDate.isValid()) {
+	  // Manejar el caso en que la fecha no sea válida
+	  throw new Error('Fecha de publicación no válida');
+	}
 
         // Actualiza los campos de la entrada con los nuevos datos
-        entryToUpdate.title = updatedEntry.title;
-        entryToUpdate.author = updatedEntry.author;
-        entryToUpdate.content = updatedEntry.content;
-        entryToUpdate.publicationDate = new Date(format(updatedEntry.publicationDate, 'dd/MM/yyyy'));
+        entryToUpdate.title = updatedEntryDto.title;
+        entryToUpdate.author = updatedEntryDto.author;
+        entryToUpdate.content = updatedEntryDto.content;
+        entryToUpdate.publicationDate = parsedDate.toDate();
 
         return this.entryRepository.save(entryToUpdate);
     }
