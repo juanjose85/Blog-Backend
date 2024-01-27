@@ -1,4 +1,8 @@
 {
+  "include": [
+    ".eslintrc.js",  // Agrega la ruta al archivo .eslintrc.js si no está incluido
+    "src/**/*.ts",  // Ajusta según la estructura de tu proyecto TypeScript
+  ],
   "compilerOptions": {
     "module": "commonjs",
     "declaration": true,
@@ -12,7 +16,7 @@
     "baseUrl": "./",
     "incremental": true,
     "skipLibCheck": true,
-    "strictNullChecks": false,
+    "strictNullChecks": true,
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
